@@ -4,6 +4,9 @@ package CyclicBarrier;
 import java.util.Map;
 import java.util.concurrent.*;
 
+/**
+ * 模拟一个银行结算功能
+ */
 public class BankWaterServer implements Runnable {
 
     /**
