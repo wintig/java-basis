@@ -18,7 +18,6 @@ public class My_Join_Achieve extends Thread{
             lock.wait();
         }
 
-
         System.out.println("主线程执行完毕");
 
     }

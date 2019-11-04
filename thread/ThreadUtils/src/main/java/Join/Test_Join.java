@@ -21,11 +21,17 @@ public class Test_Join extends Thread{
         try {
 
             /**
+             *  如果我当前的线程需要依赖另一个线程的处理结果，那我当前现在就可以执行另一个线程方法的join.
+             *  就是我你处理吧，我等你干完了我再干
+             *
+             *  join() 表示无限等待
+             *  join(long millis)  表示我只等millis时间
              *
              * join原理其实就是调用了wait方法
              *
              * 当前线程调用了wait方法那么就会进行等待状态，释放调用了join方法的对象锁。
              * join线程的执行run逻辑，直到join的逻辑执行完毕后，由“操作系统”notify等待调用join方法的线程
+             *
              *
              */
 
