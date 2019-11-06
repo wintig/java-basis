@@ -1,3 +1,5 @@
+package atomic;
+
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
 /**
