@@ -18,7 +18,7 @@ public class SemaphoreDemo implements Runnable {
             semaphore.acquire();
 
             // 尝试获得一个许可证，如果恒公返回true，失败则返回false。不会阻塞等待
-            boolean success = semaphore.tryAcquire();
+            // boolean success = semaphore.tryAcquire();
 
             Thread.sleep(2000);
             System.out.println(Thread.currentThread().getId() + ":done!");
