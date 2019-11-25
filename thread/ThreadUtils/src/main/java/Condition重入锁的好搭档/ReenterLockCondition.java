@@ -22,7 +22,7 @@ public class ReenterLockCondition implements Runnable {
              */
             condition.await();
 
-            // 和await方法基本相同，但是await可以相应中断，这个不会。
+            // 和await方法基本相同，但是await可以响应中断，这个不会。
             //condition.awaitUninterruptibly();
 
             System.out.println("线程继续执行");
