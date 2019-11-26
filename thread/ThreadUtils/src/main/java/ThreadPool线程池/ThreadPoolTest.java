@@ -18,7 +18,7 @@ public class ThreadPoolTest {
      *
      * 当队列中没有空闲线程，并且线程数大于等于最小线程数（corePoolSize）的时候，这时候就丢到阻塞队列中去，阻塞队列有上面几种，看情况选择；
      *
-     * 如果核心线程数的所有队列都满了，这时候就创建新的线程来执行任务，如果小于最大线程数（maximumPoolSize），那么就创建一个新的线程来处理任务。
+     * 如果核心线程数和队列都满了，这时候就创建新的线程来执行任务，如果小于最大线程数（maximumPoolSize），那么就创建一个新的线程来处理任务。
      * 如果达到最大线程数，则调用RejectedExecutionHandler的方法执行饱和策略
      */
     public static void main(String[] args) {
