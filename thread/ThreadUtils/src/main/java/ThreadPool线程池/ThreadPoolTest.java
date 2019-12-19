@@ -59,6 +59,11 @@ public class ThreadPoolTest {
         // 调用后，线程池会提前创建并启动所有的基本线程
         // executor.prestartAllCoreThreads();
 
+        /**
+         * 如果当前线程池中的线程数超过了corePoolSize，那么如果在keepAliveTime时间内都没有新的任务需要处理，那么超过corePoolSize的这部分线程就会被销毁。
+         * 默认情况下是不会回收core线程的，这里为true的话时间到了也会收回
+         */
+        // executor.allowCoreThreadTimeOut(true);
 
         /**
          * 线程池执行任务的两种策略
