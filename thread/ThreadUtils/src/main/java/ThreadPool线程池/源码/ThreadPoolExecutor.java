@@ -797,7 +797,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
         Thread wt = Thread.currentThread();
         Runnable task = w.firstTask;
         w.firstTask = null;
-        w.unlock(); // allow interrupts
+        w.unlock();  // 调用unlock()方法，将state置为0，表示其他操作可以获得锁或者中断worker
         boolean completedAbruptly = true;
         try {
             while (task != null || (task = getTask()) != null) {
@@ -806,15 +806,20 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
                 // if not, ensure thread is not interrupted.  This
                 // requires a recheck in second case to deal with
                 // shutdownNow race while clearing interrupt
+                /**
+                 * 如果线程池正在关闭，那么中断线程。
+                 */
                 if ((runStateAtLeast(ctl.get(), STOP) ||
                         (Thread.interrupted() &&
                                 runStateAtLeast(ctl.get(), STOP))) &&
                         !wt.isInterrupted())
                     wt.interrupt();
                 try {
+                    // 执行beforeExecute回调
                     beforeExecute(wt, task);
                     Throwable thrown = null;
                     try {
+                        // 实际开始执行任务
                         task.run();
                     } catch (RuntimeException x) {
                         thrown = x; throw x;
@@ -823,16 +828,19 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
                     } catch (Throwable x) {
                         thrown = x; throw new Error(x);
                     } finally {
+                        // 执行afterExecute回调
                         afterExecute(task, thrown);
                     }
                 } finally {
                     task = null;
+                    // 这里加了锁，因此没有线程安全的问题，volatile修饰保证其他线程的可见性
                     w.completedTasks++;
                     w.unlock();
                 }
             }
             completedAbruptly = false;
         } finally {
+            // 抛异常了，或者当前队列中已没有任务需要处理等
             processWorkerExit(w, completedAbruptly);
         }
     }
@@ -1094,8 +1102,12 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
         mainLock.lock();
         try {
             checkShutdownAccess();
+            // 通过CAS将状态更改为SHUTDOWN，这个时候线程池不接受新任务，但会继续处理队列中的任务
             advanceRunState(SHUTDOWN);
+            // 中断所有空闲的worker,也就是说除了正在处理任务的worker，其他阻塞在getTask()上的worker
+            // 都会被中断
             interruptIdleWorkers();
+            // 执行回调
             onShutdown(); // hook for ScheduledThreadPoolExecutor
         } finally {
             mainLock.unlock();
@@ -1126,9 +1138,12 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
         mainLock.lock();
         try {
             checkShutdownAccess();
+
+            // 不同于shutdown()，会转换为STOP状态，不再处理新任务，队列中的任务也不处理，
+            // 而且会中断所有的worker，而不只是空闲的worker
             advanceRunState(STOP);
             interruptWorkers();
-            tasks = drainQueue();
+            tasks = drainQueue(); //将所有的任务从队列中弹出
         } finally {
             mainLock.unlock();
         }
