@@ -1,11 +1,8 @@
 package ThreadPool线程池.实现;
 
-import ThreadPool线程池.源码.ThreadPoolExecutor;
-import javafx.concurrent.Worker;
-
 
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -26,6 +23,9 @@ public class CustomThreadPool {
 
     // 工作队列线程
     private final BlockingQueue<Runnable> workQueue;
+
+    // 拒绝策略
+    private volatile RejectedExecutionHandler handler;
 
     public CustomThreadPool(int corePoolSize,
                               int maximumPoolSize,
@@ -54,12 +54,20 @@ public class CustomThreadPool {
         // 当前线程数小于corePoolSize那么就扩容
         if (workQueue.size() < corePoolSize) {
             addWorker(command, true);
+            return;
         }
 
-        boolean offer = workQueue.offer(command);
-
         // 如果写入失败的话
-        if (!offer) {
+        if (!workQueue.offer(command)) {
+
+            // 小于最大线程数则创建线程
+            if (workQueue.size() < maximumPoolSize) {
+                addWorker(command, false);
+                return;
+            } else {
+                // 超过最大线程
+                reject(command);
+            }
 
         }
 
@@ -77,6 +85,10 @@ public class CustomThreadPool {
 
 
         return false;
+    }
+
+    final void reject(Runnable command) {
+
     }
 
 }
