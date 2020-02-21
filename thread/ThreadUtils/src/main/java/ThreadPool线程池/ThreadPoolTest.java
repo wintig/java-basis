@@ -20,11 +20,18 @@ public class ThreadPoolTest {
      *
      * 如果核心线程数和队列都满了，这时候就创建新的线程来执行任务，如果小于最大线程数（maximumPoolSize），那么就创建一个新的线程来处理任务。
      * 如果达到最大线程数，则调用RejectedExecutionHandler的方法执行饱和策略
+     *
+     * 核心线程数应该如何选择：
+     * 核心线程数的选择，这就要看执行任务的类型。通常任务分为1,cpu密集型任务 2,io密集型任务 3，混合型任务
+     * 如果是cpu密集型的任务，线程cpu时间所占比例高，这时候就应该尽量减少线程数
+     * 如果是io密集型的任务，通常线程等待的时间所占比例高，这时候可以加大线程数量，因为io等待不占用cpu资源 建议配置2*cpu + 1
+     * 如果是混合型任务就根据具体情况进行拆分
+     *
      */
     public static void main(String[] args) {
 
         /**
-         * corePoolSize ：最小线程数
+         * corePoolSize ：核心线程数
          *
          * maximumPoolSize ：最大线程数，线程池允许创建的最大线程数。
          *
@@ -90,11 +97,8 @@ public class ThreadPoolTest {
 
         /**
          * 线程的关闭，有两种方式shutdown，shutdownNow。他们都是通过遍历线程池中的工作线程，然后逐个调用线程的interrupt方法来中断线程。
-         *
-         * shutdown：只是将线程状态设置成shutdown状态，然后终端所有没有正在执行的任务线程
-         *
+         * shutdown：只是将线程状态设置成shutdown状态，然后中断所有没有正在执行的任务线程
          * shutdownNow：首先将线程的状态改为STOP，然后尝试停止所有正在执行或暂停的任务，并返回等待执行任务列表。
-         *
          */
 
         executor.shutdown();
