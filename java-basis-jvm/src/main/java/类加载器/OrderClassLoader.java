@@ -31,6 +31,6 @@ public class OrderClassLoader extends ClassLoader {
 
         }
 
-        return super.findClass(name);
+        return super.findClass("");
     }
 }
