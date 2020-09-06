@@ -67,13 +67,24 @@ public class UesThreadPool {
 
         int availableProcessors = Runtime.getRuntime().availableProcessors();
         System.out.println("当前机器可用CPU数量 ：" + availableProcessors);
+        // 拒绝策略：
+        // AbortPolicy：直接抛出异常（默认）
+        // CallerRunsPolicy：谁提交的任务谁执行
+        // DiscardOldestPolicy：丢弃队列最近的一个任务，并执行当前任务
+        // DiscardPolicy：直接丢掉
 
-
+        /**
+         * 拒绝策略：
+         * AbortPolicy：直接抛出异常（默认）
+         * CallerRunsPolicy：谁提交的任务谁执行
+         * DiscardOldestPolicy：丢弃队列最近的一个任务，并执行当前任务
+         * DiscardPolicy：直接丢掉
+         */
         ExecutorService threadPool = new ThreadPoolExecutor(2, 4,
                 2, TimeUnit.SECONDS,
                 new ArrayBlockingQueue<>(10),
                 //new MyThreadFactory(),  // 设置守护线程
-                new ThreadPoolExecutor.DiscardPolicy()) {
+                new ThreadPoolExecutor.AbortPolicy()) {
 
             // 线程执行之前
             @Override
