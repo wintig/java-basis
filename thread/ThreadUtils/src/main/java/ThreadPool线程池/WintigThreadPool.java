@@ -63,7 +63,7 @@ public class WintigThreadPool {
     private class WorkThread extends Thread {
         @Override
         public void run() {
-            Runnable take = null;
+            Runnable take;
             try {
                 // 如果当前线程不中断
                 while (!isInterrupted()) {
