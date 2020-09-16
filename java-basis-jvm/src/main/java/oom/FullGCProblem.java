@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class FullGCProblem {
     //线程池
-    private static ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(100,
+    private static ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(10,
             new ThreadPoolExecutor.DiscardOldestPolicy());
 
     public static void main(String[] args) throws Exception {

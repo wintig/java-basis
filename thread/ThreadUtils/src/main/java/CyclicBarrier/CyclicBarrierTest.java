@@ -1,46 +1,86 @@
 package CyclicBarrier;
 
-
+import java.util.Random;
+import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-/**
- * CyclicBarrier字面意思是可循环使用（Cyclic）的屏障（Barrier）
- *
- * CyclicBarrier想当与一个门，初始化的关键字就相当于你要初始化几道门。
- * 每个线程相当于钥匙，当你调用await方法后，就说明你插入了一把钥匙。
- *
- * 这道门安全系数特别高，只有当你把所有钥匙（对应线程）都插入门锁（await方法）中，所有线程才能继续执行下面方法
- *
- */
 public class CyclicBarrierTest {
 
-    // 构造器表示平常拦截的线程数
-    static CyclicBarrier c = new CyclicBarrier(3);
-
+    /**
+     *
+     * barrier 英文是屏障，障碍，栅栏的意思。cyclic是循环的意思，就是说，这个屏障可以循环使用。
+     *
+     * 一组线程会互相等待，直到所有线程都到达一个同步点。
+     * 这个就非常有意思了，就像一群人被困到了一个栅栏前面，只有等最后一个人到达之后，他们才可以合力把栅栏（屏障）突破。
+     *
+     * 应用场景：
+     * 一组运动员比赛 1000 米，只有在所有人都准备完成之后，才可以一起开跑（额，先忽略裁判吹口哨的细节）。
+     *
+     * 定义一个 Runner 类代表运动员，其内部维护一个共有的 CyclicBarrier，每个人都有一个准备时间，准备完成之后，会调用 await 方法，等待其他运动员。
+     * 当所有人准备都 OK 时，就可以开跑了。
+     *
+     *
+     * @param args
+     */
     public static void main(String[] args) {
 
-        new Thread(new Runnable() {
+        /**
+         * 第一个构造的参数，指的是需要几个线程一起到达，才可以使所有线程取消等待。
+         * 第二个构造，额外指定了一个参数，用于在所有线程达到屏障时，优先执行 barrierAction。
+         */
+        // CyclicBarrier barrier = new CyclicBarrier(3);  //①
 
-            @Override
-            public void run() {
-                try {
-                    c.await();
-                } catch (Exception e) {
-
-                }
-
-                System.out.println(1);
+        CyclicBarrier barrier = new CyclicBarrier(3, () -> {
+            try {
+                System.out.println("等裁判吹口哨...");
+                //这里停顿两秒更便于观察线程执行的先后顺序
+                Thread.sleep(2000);
+                System.out.println("裁判吹口哨->>>>>");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        }).start();
+        });
 
+        Runner runner1 = new Runner(barrier, "张三");
+        Runner runner2 = new Runner(barrier, "李四");
+        Runner runner3 = new Runner(barrier, "王五");
 
-        try {
-            c.await();
-        } catch (Exception e) {
+        ExecutorService service = Executors.newFixedThreadPool(3);
+        service.execute(runner1);
+        service.execute(runner2);
+        service.execute(runner3);
 
-        }
-        System.out.println(2);
+        service.shutdown();
 
     }
 
+}
+
+
+class Runner implements Runnable{
+
+    private CyclicBarrier barrier;
+    private String name;
+
+    public Runner(CyclicBarrier barrier, String name) {
+        this.barrier = barrier;
+        this.name = name;
+    }
+
+    @Override
+    public void run() {
+        try {
+            //模拟准备耗时
+            Thread.sleep(new Random().nextInt(5000));
+            System.out.println(name + ":准备OK");
+            barrier.await();
+            System.out.println(name +": 开跑");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (BrokenBarrierException e){
+            e.printStackTrace();
+        }
+    }
 }
