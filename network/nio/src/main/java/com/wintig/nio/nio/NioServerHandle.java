@@ -33,10 +33,10 @@ public class NioServerHandle implements Runnable{
             serverSocketChannel.socket().bind(new InetSocketAddress(port)); // 绑定端口
 
             started = true;
-            System.out.println("服务器已启动，端口号：" + port);
 
             // 注册事件，表示关心客户端连接事件
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+            System.out.println("服务器已启动，端口号：" + port);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -58,9 +58,10 @@ public class NioServerHandle implements Runnable{
                 Iterator<SelectionKey> iterator = selectionKeys.iterator();
                 while (iterator.hasNext()){
                     SelectionKey key = iterator.next();
-                    iterator.remove();  // 从事件集移除
+                    // 必须要讲处理过的key从选定的键集合中移除
+                    // 如果不移除，它仍然会在主集合中以一个激活的键存在，这会导致再一次被处理
+                    iterator.remove();
                     handleInput(key);
-
                 }
 
             } catch (IOException e) {
@@ -82,24 +83,30 @@ public class NioServerHandle implements Runnable{
 
             // 获取当前关心事件的channel
             ServerSocketChannel ssc = (ServerSocketChannel) key.channel();
+
             // 建立三次握手
             SocketChannel socketChannel = ssc.accept();
             System.out.println("连接已建立");
 
-            ssc.configureBlocking(false);
+            socketChannel.configureBlocking(false);
             socketChannel.register(selector, SelectionKey.OP_READ); // 关注读事件
         }
 
         // 处理对端发送的数据
         if (key.isReadable()) {
             SocketChannel socketChannel = (SocketChannel) key.channel();
+
+            // 开辟一个新的缓冲区
             ByteBuffer buffer = ByteBuffer.allocate(1024);
+
             // 从通道里面读取数据，然后写入buffer里面，表示读到数据的数量
-            int readBytes = socketChannel.read(buffer);
+            int readBytes = socketChannel.read(buffer); // 这个方法叫readTo会更好
+
             if (readBytes > 0) {
 
                 buffer.flip();
 
+                // 根据缓冲区可读字节数创建字节数组
                 byte[] bytes = new byte[buffer.remaining()];
                 buffer.get(bytes);  // 从buffer中获取相关数据，写入bytes
 
@@ -113,7 +120,9 @@ public class NioServerHandle implements Runnable{
             }
             // 表示对端已经没有发送数据了
             else if (readBytes < 0) {
-                key.cancel();   // 关闭通道
+                // 取消特定的注册关系
+                key.cancel();
+                // 关闭通道
                 socketChannel.close();
             }
         }

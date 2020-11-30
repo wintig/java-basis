@@ -11,6 +11,7 @@ public class NioClient {
 
     private static void start() throws IOException {
         nioClientHandle = new NioClientHandle(DEFAULT_SERVER_IP, DEFAULT_PORT);
+        new Thread(nioClientHandle,"Server").start();
     }
 
     public static boolean sendMsg(String msg) throws Exception {
