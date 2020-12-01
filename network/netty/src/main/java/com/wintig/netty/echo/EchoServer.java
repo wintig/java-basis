@@ -42,7 +42,7 @@ public class EchoServer {
                     .channel(NioServerSocketChannel.class) //指定使用nio的通讯模式
                     .localAddress(new InetSocketAddress(port))  // 指定监听端口
 
-                    // 初始化时间处理器
+                    // 初始化事件处理器
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
@@ -61,9 +61,6 @@ public class EchoServer {
             group.shutdownGracefully().sync();
         }
 
-
     }
-
-
 
 }
