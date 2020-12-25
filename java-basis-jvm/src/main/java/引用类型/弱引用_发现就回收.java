@@ -5,35 +5,37 @@ import java.lang.ref.WeakReference;
 public class 弱引用_发现就回收 {
 
     public static class User {
-        public int id;
         public String name;
 
-        public User(int id, String name) {
-            this.id = id;
+        public User(String name) {
             this.name = name;
         }
 
         @Override
         public String toString() {
             return "User{" +
-                    "id=" + id +
-                    ", name='" + name + '\'' +
+                    "name='" + name + '\'' +
                     '}';
+        }
+    }
+
+    // 将User作为弱引用，回收的时候回收的user而不是school
+    public static class School extends WeakReference<User> {
+        public School(User user) {
+            super(user);
         }
     }
 
     public static void main(String[] args) {
 
-        User u = new User(1, "tig");
-        WeakReference<User> userWeakReference = new WeakReference<>(u);
+        // 建立了一个弱引用school和user的关系
+        School school = new School(new User("wintig"));
 
-        u = null;
-
-        System.out.println(userWeakReference.get());
+        System.out.println("before gc ： " + school.get());
+        System.out.println("=== GC ===");
         System.gc();
-        // 不管当前内存空间是否足够，都会回收内存
-        System.out.println("After GC:");
-        System.out.println(userWeakReference.get());
+        // 不管内存够不够，都直接回收
+        System.out.println("after gc ： " + school.get());
     }
 
 }
