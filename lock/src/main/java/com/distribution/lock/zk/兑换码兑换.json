@@ -1,0 +1,270 @@
+[{
+        "chains": [{
+                "ruleChain": [{
+                        "params": [{
+                                "identify_by": "1",
+                                "counter_id": "",
+                                "unit_of_time": "0",
+                                "max_count": "1",
+                                "offset": "0"
+                        }],
+                        "editParams": {
+                                "identify_by": {
+                                        "is_show": 0
+                                },
+                                "counter_id": {
+                                        "is_show": 0
+                                },
+                                "unit_of_time": {
+                                        "is_show": 0
+                                },
+                                "max_count": {
+                                        "is_show": 1
+                                },
+                                "offset": {
+                                        "is_show": 0
+                                }
+                        },
+                        "contentDesc": null,
+                        "paramsFixed": null,
+                        "is": 1,
+                        "passRule": null,
+                        "key": "Counter",
+                        "type": "array"
+                }],
+                "actionChain": [{
+                        "params": {
+                                "req_handle": "",
+                                "prize_ids": "",
+                                "check_msg": "1",
+                                "need_cid": "0"
+                        },
+                        "editParams": {
+                                "req_handle": {
+                                        "is_show": 0
+                                },
+                                "prize_ids": {
+                                        "is_show": 0
+                                },
+                                "check_msg": {
+                                        "is_show": 1
+                                },
+                                "need_cid": {
+                                        "is_show": 0
+                                }
+                        },
+                        "contentDesc": null,
+                        "paramsFixed": null,
+                        "is": "",
+                        "passRule": null,
+                        "key": "DoPrizeAsync",
+                        "type": "object"
+                }],
+                "index": "1",
+                "cmd_sn": "1"
+        }],
+        "cmd": "0",
+        "remark": "验证短信并异步发放红包",
+        "type": "1"
+}, {
+        "chains": [{
+                "ruleChain": [{
+                        "params": [{
+                                "identify_by": "1",
+                                "counter_id": "",
+                                "unit_of_time": "0",
+                                "max_count": "1",
+                                "offset": "0"
+                        }],
+                        "editParams": {
+                                "identify_by": {
+                                        "is_show": 0
+                                },
+                                "counter_id": {
+                                        "is_show": 0
+                                },
+                                "unit_of_time": {
+                                        "is_show": 0
+                                },
+                                "max_count": {
+                                        "is_show": 1
+                                },
+                                "offset": {
+                                        "is_show": 0
+                                }
+                        },
+                        "contentDesc": null,
+                        "paramsFixed": null,
+                        "is": 1,
+                        "passRule": null,
+                        "key": "Counter",
+                        "type": "array"
+                }, {
+                        "params": {
+                                "isNot": "0"
+                        },
+                        "editParams": {
+                                "isNot": {
+                                        "is_show": 0
+                                }
+                        },
+                        "contentDesc": null,
+                        "paramsFixed": null,
+                        "is": 1,
+                        "passRule": null,
+                        "key": "IsNeverUsedCoupon",
+                        "type": "object"
+                }, {
+                        "params": {
+                                "isNot": "1",
+                                "is_filter_inner": "1"
+                        },
+                        "editParams": {
+                                "isNot": {
+                                        "is_show": 0
+                                },
+                                "is_filter_inner": {
+                                        "is_show": 1
+                                }
+                        },
+                        "contentDesc": null,
+                        "paramsFixed": null,
+                        "is": 1,
+                        "passRule": null,
+                        "key": "HasValidCoupon",
+                        "type": "object"
+                }],
+                "actionChain": [{
+                        "params": [{
+                                "force_db": "1",
+                                "reward_cnt": "1",
+                                "reward_id": "0",
+                                "reward_type": "0",
+                                "reward_amt": ""
+                        }],
+                        "editParams": {
+                                "force_db": {
+                                        "is_show": 0
+                                },
+                                "reward_cnt": {
+                                        "is_show": 1
+                                },
+                                "reward_id": {
+                                        "is_show": 1
+                                },
+                                "reward_type": {
+                                        "is_show": 0
+                                },
+                                "reward_amt": {
+                                        "is_show": 1
+                                }
+                        },
+                        "contentDesc": "",
+                        "paramsFixed": 0,
+                        "is": "",
+                        "passRule": null,
+                        "key": "DoMulPrize",
+                        "type": "array"
+                }, {
+                        "params": [{
+                                "identify_by": "1",
+                                "counter_id": "",
+                                "unit_of_time": "0",
+                                "offset": "0"
+                        }],
+                        "editParams": null,
+                        "contentDesc": null,
+                        "paramsFixed": null,
+                        "is": "",
+                        "passRule": null,
+                        "key": "Counter",
+                        "type": "array"
+                }],
+                "index": "1",
+                "cmd_sn": "2"
+        }, {
+                "ruleChain": [{
+                        "params": [{
+                                "identify_by": "1",
+                                "counter_id": "",
+                                "unit_of_time": "0",
+                                "max_count": "1",
+                                "offset": "0"
+                        }],
+                        "editParams": {
+                                "identify_by": {
+                                        "is_show": 0
+                                },
+                                "counter_id": {
+                                        "is_show": 0
+                                },
+                                "unit_of_time": {
+                                        "is_show": 0
+                                },
+                                "max_count": {
+                                        "is_show": 1
+                                },
+                                "offset": {
+                                        "is_show": 0
+                                }
+                        },
+                        "contentDesc": null,
+                        "paramsFixed": null,
+                        "is": 1,
+                        "passRule": null,
+                        "key": "Counter",
+                        "type": "array"
+                }],
+                "actionChain": [{
+                        "params": [{
+                                "force_db": "1",
+                                "reward_cnt": "1",
+                                "reward_id": "0",
+                                "reward_type": "0",
+                                "reward_amt": ""
+                        }],
+                        "editParams": {
+                                "force_db": {
+                                        "is_show": 0
+                                },
+                                "reward_cnt": {
+                                        "is_show": 1
+                                },
+                                "reward_id": {
+                                        "is_show": 1
+                                },
+                                "reward_type": {
+                                        "is_show": 0
+                                },
+                                "reward_amt": {
+                                        "is_show": 1
+                                }
+                        },
+                        "contentDesc": "",
+                        "paramsFixed": 0,
+                        "is": "",
+                        "passRule": null,
+                        "key": "DoMulPrize",
+                        "type": "array"
+                }, {
+                        "params": [{
+                                "identify_by": "1",
+                                "counter_id": "",
+                                "unit_of_time": "0",
+                                "offset": "0"
+                        }],
+                        "editParams": null,
+                        "contentDesc": null,
+                        "paramsFixed": null,
+                        "is": "",
+                        "passRule": null,
+                        "key": "Counter",
+                        "type": "array"
+                }],
+                "index": "2",
+                "cmd_sn": "2"
+        }],
+        "cmd": "40020281",
+        "remark": "异步发放红包",
+        "type": "2"
+}]
